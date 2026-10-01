@@ -184,6 +184,11 @@ void clear(vector *v) {
     if(v->cap == NULL)
     return;
     memset(v->data,0,(v->end - v->data)*sizeof(int));
+    /*
+    for(int i=0;i + v->data <v->end;i++){
+        *(v->data + i) = 0;
+    }
+    */
     v->end = v->data;
     return;
 }
