@@ -159,6 +159,7 @@ int reserve(vector *v, size_t capacity) {
 
 int shrink_to_fit(vector *v) {
      if(size(v) == 0){
+        free(v->data);
         v->cap = NULL;
         v->data = NULL;
         v->end = NULL;
@@ -183,12 +184,12 @@ int shrink_to_fit(vector *v) {
 void clear(vector *v) {
     if(v->cap == NULL)
     return;
-    memset(v->data,0,(v->end - v->data)*sizeof(int));
+   memset(v->data,0,(v->end - v->data)*sizeof(int));
     /*
     for(int i=0;i + v->data <v->end;i++){
         *(v->data + i) = 0;
     }
     */
-    v->end = v->data;
+   v->end = v->data;
     return;
 }
