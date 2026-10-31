@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+/*判断越界情况,容量为 0 要特别判断，检验申请是否成功*/
 int vector_init(vector *v, size_t capacity) {
     if(capacity>=(SIZE_MAX/sizeof(int))){
         v->cap = NULL;
@@ -31,7 +31,7 @@ int vector_init(vector *v, size_t capacity) {
     v->data = temp;//处理数组的相关信息
     return 0;
 }
-
+/*检查数组是否为空*/
 void vector_destroy(vector *v) {
     if(v->data == NULL)
     return;//为空则不用删除
@@ -41,27 +41,27 @@ void vector_destroy(vector *v) {
     v->end = NULL;//置空指针
     return;
 }
-
+/*检查指针为空*/
 size_t size(const vector *v) {
     if(v->data == NULL)
     return 0;
     else
     return (v->end - v->data);//求得数组的元素的数量
 }
-
+/*检查指针是否为空*/
 size_t capacity(const vector *v) {
     if(v->cap == NULL)
     return 0;
     return (v->cap - v->data);//求数组的容量
 }
-
+/*也应该有检查指针是否为空*/
 int empty(const vector *v) {
     if(v->end == v->data)
     return 1;//判断元素数是否与头指针相同
     else
     return 0;
 }
-
+/*越界与是否为空*/
 int get(const vector *v, size_t index, int *out) {
     if(v->data == NULL)
     return -1;//判断数组是否为空
@@ -70,7 +70,7 @@ int get(const vector *v, size_t index, int *out) {
     *out = *(v->data + index);//根据索引得到数据
     return 0;
 }
-
+/*数组是否存在，索引越界*/
 int set(vector *v, size_t index, int value) {
     if(v->cap == NULL)//判断数组是否存在
     return -1;
@@ -79,21 +79,21 @@ int set(vector *v, size_t index, int value) {
     *(v->data + index) = value;//对对应的数进行赋值
     return 0;
 }
-
+/*数组是否为空*/
 int front(const vector *v, int *out) {
     if(empty(v))//检查数组是否为空
     return -1;
     *out = *v->data;//得到开头的数
     return 0;
 }
-
+/*数组是否为空*/
 int back(const vector *v, int *out) {
     if(empty(v))//判断是否为空
     return -1;
     *out = *(v->end - 1);//得到尾部的数值
     return 0;
 }
-
+/*数组未申请判断，分别处理容量足够和容量不足的情况，不足时要新申请一倍空间，注意越界*/
 int push_back(vector *v, int value) {
     if(v->cap == NULL){//当数组未申请的情况
         v->data = malloc(sizeof(int));
@@ -127,14 +127,14 @@ int push_back(vector *v, int value) {
     }
 
 }
-
+/*判断数组是否为空*/
 int pop_back(vector *v, int *out) {
      if(empty(v))
     return -1;
-    *out = *(--v->end);//取出最后的元素，并删除
+    *out = *(--v->end);//取出最后的元素，并删除，end本身指向下一个元素填充的位置
     return 0;
 }
-
+/*判断预留空间是否为0，判断是否需要预留空间*/
 int reserve(vector *v, size_t capacity) {
     if(capacity == 0){//预留空间为零
         free(v->data);
@@ -156,7 +156,7 @@ int reserve(vector *v, size_t capacity) {
     v->data = temp;
     return 0;
 }
-
+/*用的malloc，判断空间是否足够，复制原数据，并释放原内存*/
 int shrink_to_fit(vector *v) {
      if(size(v) == 0){//判断没数据的情况
         free(v->data);
@@ -180,7 +180,7 @@ int shrink_to_fit(vector *v) {
     return 0;
 
 }
-
+/*实际上只需调整尾部即可，不用重新设置*/
 void clear(vector *v) {
     if(v->cap == NULL)
     return;
